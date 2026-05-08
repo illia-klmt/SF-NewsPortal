@@ -1,0 +1,1 @@
+News Portal Project. Учебное задание по моделям Django.

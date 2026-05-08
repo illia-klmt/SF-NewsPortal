@@ -1,0 +1,59 @@
+1. Подготовка (Импорты)
+
+from django.contrib.auth.models import User
+from news.models import Author, Category, Post, Comment
+
+2. Создание пользователей и авторов
+
+u1 = User.objects.create_user(username='Igor',)
+u2 = User.objects.create_user(username='Oksana')
+
+a1 = Author.objects.create(user=u1)
+a2 = Author.objects.create(user=u2)
+
+3. Создание категорий
+
+c1 = Category.objects.create(category_name='Sport')
+c2 = Category.objects.create(category_name='Politics')
+c3 = Category.objects.create(category_name='Education')
+c4 = Category.objects.create(category_name='Tech')
+
+4. Создание статей и новости
+
+p1 = Post.objects.create(author=a1, post_type='AR', heading='Future of AI', body='Artificial Intelligence is evolving rapidly...')
+
+p2 = Post.objects.create(author=a2, post_type='AR', heading='Django Guide', body='Django is a high-level Python web framework...')
+
+p3 = Post.objects.create(author=a1, post_type='NW', heading='Breaking News', body='Something important happened today!')
+
+5. Привязка категорий к постам
+
+p1.categories.add(c1, c4)
+p2.categories.add(c3)
+p3.categories.add(c2)
+
+6. Создание комментариев
+
+comm1 = Comment.objects.create(post=p1, user=u2, text="Great article!")
+comm2 = Comment.objects.create(post=p1, user=u1, text="I agree with myself.")
+comm3 = Comment.objects.create(post=p2, user=u1, text="Very helpful guide.")
+comm4 = Comment.objects.create(post=p3, user=u2, text="Wow, interesting news.")
+
+7. Работа с рейтингами (Лайки/Дизлайки)
+
+some.like()
+some.dislike()
+
+a1.update_rating()
+a2.update_rating()
+
+8. Финальные запросы (Вывод результатов)
+
+best_auth = Author.objects.order_by('-rating').first()
+print(f"Лучший автор: {best_auth.user.username}, Рейтинг: {best_auth.rating}")
+
+best_post = Post.objects.filter(post_type='AR').order_by('-rating').first()
+print(f"Дата: {best_post.created}, Автор: {best_post.author.user.username}, Рейтинг: {best_post.rating}, Заголовок: {best_post.heading}, Превью: {best_post.preview()}")
+
+for c in Comment.objects.filter(post=best_post):
+    print(f"Дата: {c.created}, Пользователь: {c.user.username}, Рейтинг: {c.rating}, Текст: {c.text}")
